@@ -19,7 +19,7 @@ jobs:
       with:
         distribution: 'temurin'  # Use Eclipse Temurin JDK
         java-version: '17'
-        cache: 'maven'  # Enable Maven cache to speed up dependency resolution
+        # Removed cache: 'maven' temporarily to avoid stale cache issues
 
     - name: Build with Maven (Debugging)
       run: mvn clean install -X  # Run `mvn clean install` and enable debug output for troubleshooting
@@ -27,8 +27,9 @@ jobs:
     - name: List target directory contents (debugging)
       run: ls -alh target/  # List contents of the target directory to check if the .jar file exists
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3  # Explicitly use the stable version of the action
+    - name: Upload Build Artifact (only if jar exists)
+      if: success() && (steps.build.outputs.artifact_file != '')  # Only run if the file exists
+      uses: actions/upload-artifact@v2  # Use a stable version (v2)
       with:
         name: my-java-app  # Artifact name
         path: target/*.jar  # Path to the .jar file to upload
