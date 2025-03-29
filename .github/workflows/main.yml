@@ -28,7 +28,7 @@ jobs:
       run: ls -alh target/  # List contents of the target directory to check if the .jar file exists
 
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3.1.0  # Explicitly use the latest stable version of the action
+      uses: actions/upload-artifact@v3  # Explicitly use the stable version of the action
       with:
         name: my-java-app  # Artifact name
         path: target/*.jar  # Path to the .jar file to upload
