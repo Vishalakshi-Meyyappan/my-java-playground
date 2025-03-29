@@ -3,32 +3,44 @@ name: Java CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push to the main branch
-  pull_request:
-    branches:
-      - main  # Trigger the workflow on pull requests to the main branch
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2  # Checkout the code from your repository
+      uses: actions/checkout@v2
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'  # Use Node.js version 14 (or modify based on your project)
+        node-version: '14'
 
     - name: Install dependencies
-      run: npm install  # Run this if you're working with Node.js, modify for your project
+      run: npm install
 
     - name: Build the project
-      run: npm run build  # Modify to your build script (e.g., for a Node.js project)
+      run: npm run build
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: build-artifact
-        path: ./build/*  # Replace with the correct path to your build output
+        path: ./build/*  # Ensure this path is correct
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure the deploy job runs after build job
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3.1.0
+      with:
+        name: build-artifact  # This should match the name used during upload
+
+    - name: Use artifact
+      run: |
+        echo "Deploying artifact..."
+        ls -l  # Display the artifact's contents (for demonstration)
