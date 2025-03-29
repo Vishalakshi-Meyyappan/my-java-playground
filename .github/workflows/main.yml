@@ -2,30 +2,33 @@ name: Java CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main  # Trigger the workflow on push to the main branch
   pull_request:
-    branches: [ main ]
+    branches:
+      - main  # Trigger the workflow on pull requests to the main branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v2  # Checkout the code from your repository
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
       with:
-        distribution: 'temurin'  # Use Eclipse Temurin JDK
-        java-version: '17'
-        cache: 'maven'
+        node-version: '14'  # Use Node.js version 14 (or modify based on your project)
 
-    - name: Build and Test with Maven
-      run: mvn clean package
+    - name: Install dependencies
+      run: npm install  # Run this if you're working with Node.js, modify for your project
 
-    - name: Upload Build Artifacts
+    - name: Build the project
+      run: npm run build  # Modify to your build script (e.g., for a Node.js project)
+
+    - name: Upload artifact
       uses: actions/upload-artifact@v3.1.0
       with:
-        name: my-java-app
-        path: target/*.jar
+        name: build-artifact
+        path: ./build/*  # Replace with the correct path to your build output
