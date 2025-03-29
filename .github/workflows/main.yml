@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Using the latest Ubuntu runner
+    runs-on: ubuntu-latest  # Always use the latest runner image
 
     steps:
     - name: Checkout Repository
@@ -19,7 +19,6 @@ jobs:
       with:
         distribution: 'temurin'  # Use Eclipse Temurin JDK
         java-version: '17'
-        # Removed cache: 'maven' temporarily to avoid stale cache issues
 
     - name: Build with Maven (Debugging)
       run: mvn clean install -X  # Run `mvn clean install` and enable debug output for troubleshooting
@@ -28,8 +27,7 @@ jobs:
       run: ls -alh target/  # List contents of the target directory to check if the .jar file exists
 
     - name: Upload Build Artifact (only if jar exists)
-      if: success() && (steps.build.outputs.artifact_file != '')  # Only run if the file exists
-      uses: actions/upload-artifact@v2  # Use a stable version (v2)
+      uses: actions/upload-artifact  # No version specified, will use the latest stable version
       with:
         name: my-java-app  # Artifact name
         path: target/*.jar  # Path to the .jar file to upload
